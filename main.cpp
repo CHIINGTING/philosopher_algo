@@ -60,22 +60,17 @@ enum algoNum{
     method2=1,
     method3=2
 };
+
+
 // define philosopher
 class philosopher{
 private:
     size_t philNum=0;
-    vector<function<void()>> funcs;
+    vector<function<void(int i)>> funcs;
     philosopher() {};
     philosopher(const philosopher& phil){
         funcs = phil.funcs;
     }
-    philosopher(size_t i) {
-        funcs.push_back(funA);
-        funcs.push_back(funB);
-        funcs.push_back(funC);
-        philNum = i;
-        cout << "in philosopher(size_t i): "<< i << endl;
-    };
     ~philosopher(){}
 public:
     // create singleton object
@@ -88,38 +83,39 @@ public:
         return instance;
     }
     //init function algo
-    void add(initializer_list<function<void()>> algo){
+    void add(initializer_list<function<void(int i)>> algo){
         for(auto funAlgo=algo.begin(); funAlgo != algo.end(); funAlgo++){
             funcs.push_back(*funAlgo);
         }
     }
     // add new algo
-    void add(function<void()> algo){
+    void add(function<void(int i)> algo){
         funcs.push_back(algo);
     }
     // get algo method
-    function<void()> get(algoNum i){
+    function<void(int i)> get(algoNum i){
         return funcs[i];
     }
-    function<void()> funA(int i){
-        /*  auto eating = []() -> void {
-              unique_lock<mutex> locker(alock);
-              uint64_t current_id =(uint64_t) this_thread::get_id();
-              chopsticks[current_id % maxNum]
-          };*/
-        unique_lock<mutex> locker(alock);
-        cout << "Num: "<< i <<" thread ID: "<<this_thread::get_id()<<endl;
-    };
-    function<void()> funB = []() -> void{};
-    function<void()> funC = []() -> void{};
+
 };
 
+auto funA = [](int i) -> void {
+    /*  auto eating = []() -> void {
+          unique_lock<mutex> locker(alock);
+          uint64_t current_id =(uint64_t) this_thread::get_id();
+          chopsticks[current_id % maxNum]
+      };*/
+    unique_lock<mutex> locker(alock);
+    cout << "Num: "<< i <<" thread ID: "<<this_thread::get_id()<<endl;
+};
+auto funB = [](int i) -> void{};
+auto funC = [](int i) -> void{};
 
 
 philosopher *philosopher::instance;
 int main(){
     // 加入3種演算法
-    //philosopher::singleton()->add({funA, funB, funC});
+    philosopher::singleton()->add({funA, funB, funC});
     cout<< "plz insert the method number:";
     unsigned int  chooseAlgo;
     cin >> chooseAlgo;
@@ -143,12 +139,12 @@ int main(){
             break;
         case 2:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(philosopher::singleton()->get(method2));
+                phils.emplace_back(philosopher::singleton()->get(method2),i);
             }
             break;
         case 3:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(philosopher::singleton()->get(method3));
+                phils.emplace_back(philosopher::singleton()->get(method3),i);
             }
             break;
         default:
