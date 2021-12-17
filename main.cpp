@@ -111,13 +111,13 @@ auto funA = [](int i, int maxNum) -> void {
         unique_lock<mutex> locker(alock);
 
         while (chopsticks[i]==0 || chopsticks[(i+1)%maxNum]==0){
-            cout<< "philosopher Num: "<< i <<"thread id = "<<this_thread::get_id()<<"is waiting"<<endl;
+            cout<< "philosopher Num: "<< i <<" thread id = "<<this_thread::get_id()<<"is waiting"<<endl;
             sem.wait(locker);
         }
 
         chopsticks[i] = 0;
         chopsticks[(i+1)%maxNum] = 0;
-        cout << "philosopher Num: "<< i <<"thread id = "<<this_thread::get_id()<<"is eating"<<endl;
+        cout << "philosopher Num: "<< i <<" thread id = "<<this_thread::get_id()<<"is eating"<<endl;
         eat = true;
     };
     auto thinking = [=](){
@@ -125,7 +125,7 @@ auto funA = [](int i, int maxNum) -> void {
         chopsticks[i] = 1;
         chopsticks[(i+1)%maxNum] = 1;
         sem.notify_all();
-        cout<< "philosopher Num: "<< i <<"thread id = "<<this_thread::get_id()<<"is thinking"<<endl;
+        cout<< "philosopher Num: "<< i <<" thread id = "<<this_thread::get_id()<<"is thinking"<<endl;
         alock.unlock();
     };
     while (true){
@@ -134,7 +134,6 @@ auto funA = [](int i, int maxNum) -> void {
         this_thread::sleep_for(s);
         eating();
         if(eat){
-            thinking();
             break;
         }
     }
