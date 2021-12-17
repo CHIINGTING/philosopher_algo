@@ -121,7 +121,7 @@ auto funA = [](int i, int maxNum) -> void {
         cout << "philosopher Num: "<< i <<" thread id = "<<this_thread::get_id()<<"is eating"<<endl;
 
         eat = true;
-        chrono::microseconds s(10000);
+        chrono::microseconds s(60000);
         this_thread::sleep_for(s);
     };
     auto thinking = [=](){
