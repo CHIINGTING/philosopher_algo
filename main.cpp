@@ -63,7 +63,7 @@ enum algoNum{
 // define philosopher
 class philosopher{
 private:
-    size_t philNum;
+    size_t philNum=0;
     vector<function<void()>> funcs;
     philosopher() {};
     philosopher(const philosopher& phil){
@@ -74,6 +74,7 @@ private:
         funcs.push_back(funB);
         funcs.push_back(funC);
         philNum = i;
+        cout << "in philosopher(size_t i) "<< endl;
     };
     ~philosopher(){}
 public:
@@ -108,7 +109,7 @@ public:
               chopsticks[current_id % maxNum]
           };*/
         unique_lock<mutex> locker(alock);
-        cout << "Num: "<< instance->philNum <<"thread ID:"<<this_thread::get_id()<<endl;
+        cout << "Num: "<< instance->philNum <<" thread ID: "<<this_thread::get_id()<<endl;
     };
     function<void()> funB = []() -> void{};
     function<void()> funC = []() -> void{};
