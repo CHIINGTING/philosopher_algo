@@ -63,8 +63,13 @@ enum algoNum{
 // define philosopher
 class philosopher{
 private:
+    static int AlgoNo;
     vector<function<void()>> funcs;
-    philosopher() {};
+    philosopher() {
+        funcs.push_back(funA);
+        funcs.push_back(funB);
+        funcs.push_back(funC);
+    };
     philosopher(const philosopher& phil){
         funcs = phil.funcs;
     }
@@ -72,7 +77,8 @@ private:
 public:
     // create singleton object
     static philosopher *instance;
-    static philosopher *singleton(){
+    static philosopher *singleton(int i){
+        AlgoNo = i;
         if(instance){
             return instance;
         }
@@ -93,24 +99,25 @@ public:
     function<void()> get(algoNum i){
         return funcs[i];
     }
+    function<void()> funA = []() -> void{
+        /*  auto eating = []() -> void {
+              unique_lock<mutex> locker(alock);
+              uint64_t current_id =(uint64_t) this_thread::get_id();
+              chopsticks[current_id % maxNum]
+          };*/
+        unique_lock<mutex> locker(alock);
+        cout << "Num: "<< AlgoNo <<"thread ID:"<<this_thread::get_id()<<endl;
+    };
+    function<void()> funB = []() -> void{};
+    function<void()> funC = []() -> void{};
 };
 
-function<void()> funA = []() -> void{
-  /*  auto eating = []() -> void {
-        unique_lock<mutex> locker(alock);
-        uint64_t current_id =(uint64_t) this_thread::get_id();
-        chopsticks[current_id % maxNum]
-    };*/
-  unique_lock<mutex> locker(alock);
-  cout <<"thread ID:"<<this_thread::get_id()<<endl;
-};
-function<void()> funB = []() -> void{};
-function<void()> funC = []() -> void{};
+
 
 philosopher *philosopher::instance;
 int main(){
     // 加入3種演算法
-    philosopher::singleton()->add({funA, funB, funC});
+    //philosopher::singleton()->add({funA, funB, funC});
     cout<< "plz insert the method number:";
     unsigned int  chooseAlgo;
     cin >> chooseAlgo;
@@ -129,7 +136,7 @@ int main(){
     switch (chooseAlgo) {
         case 1:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(philosopher::singleton()->get(method1));
+                phils.emplace_back(philosopher::singleton(i)->get(method1));
             }
             break;
         case 2:
