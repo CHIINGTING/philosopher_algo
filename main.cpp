@@ -63,7 +63,7 @@ enum algoNum{
 // define philosopher
 class philosopher{
 private:
-
+    int philNum;
     vector<function<void()>> funcs;
     philosopher() {
         funcs.push_back(funA);
@@ -73,17 +73,22 @@ private:
     philosopher(const philosopher& phil){
         funcs = phil.funcs;
     }
+    philosopher(int i) {
+        funcs.push_back(funA);
+        funcs.push_back(funB);
+        funcs.push_back(funC);
+        philNum = i;
+    };
     ~philosopher(){}
 public:
-    static int AlgoNo;
+
     // create singleton object
     static philosopher *instance;
     static philosopher *singleton(int i){
-        AlgoNo = i;
         if(instance){
             return instance;
         }
-        instance = new philosopher();
+        instance = new philosopher(i);
         return instance;
     }
     //init function algo
