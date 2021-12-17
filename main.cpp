@@ -137,6 +137,7 @@ auto funA = [](int i, int maxNum) -> void {
         thinking();
         eating();
     }
+    thinking();
 };
 auto funB = [](int i, int maxNum) -> void{};
 auto funC = [](int i, int maxNum) -> void{};
