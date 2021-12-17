@@ -141,12 +141,12 @@ int main(){
             break;
         case 2:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(philosopher::singleton()->get(method2));
+                phils.emplace_back(philosopher::singleton(i)->get(method2));
             }
             break;
         case 3:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(philosopher::singleton()->get(method3));
+                phils.emplace_back(philosopher::singleton(i)->get(method3));
             }
             break;
         default:
