@@ -74,7 +74,7 @@ private:
         funcs.push_back(funB);
         funcs.push_back(funC);
         philNum = i;
-        cout << "in philosopher(size_t i) "<< endl;
+        cout << "in philosopher(size_t i): "<< i << endl;
     };
     ~philosopher(){}
 public:
