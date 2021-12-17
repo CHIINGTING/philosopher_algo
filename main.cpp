@@ -117,8 +117,12 @@ auto funA = [](int i, int maxNum) -> void {
 
         chopsticks[i] = 0;
         chopsticks[(i+1)%maxNum] = 0;
+
         cout << "philosopher Num: "<< i <<" thread id = "<<this_thread::get_id()<<"is eating"<<endl;
+
         eat = true;
+        chrono::microseconds s(5000);
+        this_thread::sleep_for(s);
     };
     auto thinking = [=](){
         alock.lock();
@@ -127,13 +131,13 @@ auto funA = [](int i, int maxNum) -> void {
         sem.notify_all();
         cout<< "philosopher Num: "<< i <<" thread id = "<<this_thread::get_id()<<"is thinking"<<endl;
         alock.unlock();
+        chrono::microseconds s(10000);
+        this_thread::sleep_for(s);
     };
     while (true){
-        thinking();
-        chrono::microseconds s(1000);
-        this_thread::sleep_for(s);
         eating();
         if(eat){
+            thinking();
             break;
         }
     }
