@@ -106,7 +106,8 @@ public:
 };
 
 auto funA = [](int i, int maxNum) -> void {
-    auto eating = [=]() -> void {
+    bool eat= true;
+    auto eating = [&]() -> void {
         unique_lock<mutex> locker(alock);
 
         while (chopsticks[i]==0 || chopsticks[(i+1)%maxNum]==0){
@@ -116,7 +117,8 @@ auto funA = [](int i, int maxNum) -> void {
 
         chopsticks[i] = 0;
         chopsticks[(i+1)%maxNum] = 0;
-        cout<< "philosopher Num: "<< i <<"thread id = "<<this_thread::get_id()<<"is eating"<<endl;
+        cout << "philosopher Num: "<< i <<"thread id = "<<this_thread::get_id()<<"is eating"<<endl;
+        eat = false;
     };
     auto thinking = [=](){
         alock.lock();
@@ -126,7 +128,7 @@ auto funA = [](int i, int maxNum) -> void {
         cout<< "philosopher Num: "<< i <<"thread id = "<<this_thread::get_id()<<"is thinking"<<endl;
         alock.unlock();
     };
-    while (true){
+    while (eat){
         thinking();
         chrono::microseconds s(1000);
         this_thread::sleep_for(s);
