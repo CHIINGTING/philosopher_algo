@@ -80,12 +80,11 @@ private:
 public:
     // create singleton object
     static philosopher *instance;
-    static philosopher *singleton(int i){
+    static philosopher *singleton(){
         if(instance){
-            instance->philNum = i;
             return instance;
         }
-        instance = new philosopher(i);
+        instance = new philosopher();
         return instance;
     }
     //init function algo
@@ -102,7 +101,7 @@ public:
     function<void()> get(algoNum i){
         return funcs[i];
     }
-    function<void()> funA = []() -> void{
+    function<void()> funA(int i){
         /*  auto eating = []() -> void {
               unique_lock<mutex> locker(alock);
               uint64_t current_id =(uint64_t) this_thread::get_id();
@@ -139,17 +138,17 @@ int main(){
     switch (chooseAlgo) {
         case 1:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(philosopher::singleton(i)->get(method1));
+                phils.emplace_back(thread(philosopher::singleton()->get(method1),i));
             }
             break;
         case 2:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(philosopher::singleton(i)->get(method2));
+                phils.emplace_back(philosopher::singleton()->get(method2));
             }
             break;
         case 3:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(philosopher::singleton(i)->get(method3));
+                phils.emplace_back(philosopher::singleton()->get(method3));
             }
             break;
         default:
