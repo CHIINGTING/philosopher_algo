@@ -55,6 +55,9 @@ public:
     }
 };
 vector<semaphore> chopsticks;
+
+
+// algo method No.
 enum algoNum{
     method1=0,
     method2=1,
@@ -99,14 +102,14 @@ public:
 
 };
 
-auto funA = [](int i) -> void {
+auto funA = [](int i, int maxNum) -> void {
     /*  auto eating = []() -> void {
           unique_lock<mutex> locker(alock);
           uint64_t current_id =(uint64_t) this_thread::get_id();
           chopsticks[current_id % maxNum]
       };*/
     unique_lock<mutex> locker(alock);
-    cout << "Num: "<< i <<" thread ID: "<<this_thread::get_id()<<endl;
+    cout << "Num: "<< i << "maxNum: "<< maxNum <<" thread ID: "<<this_thread::get_id()<<endl;
 };
 auto funB = [](int i) -> void{};
 auto funC = [](int i) -> void{};
@@ -134,17 +137,17 @@ int main(){
     switch (chooseAlgo) {
         case 1:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(thread(philosopher::singleton()->get(method1),i));
+                phils.emplace_back(thread(philosopher::singleton()->get(method1), i, maxNum));
             }
             break;
         case 2:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(philosopher::singleton()->get(method2),i);
+                phils.emplace_back(philosopher::singleton()->get(method2), i, maxNum);
             }
             break;
         case 3:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(philosopher::singleton()->get(method3),i);
+                phils.emplace_back(philosopher::singleton()->get(method3), i, maxNum);
             }
             break;
         default:
