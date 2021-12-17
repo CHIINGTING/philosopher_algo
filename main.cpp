@@ -63,7 +63,7 @@ enum algoNum{
 // define philosopher
 class philosopher{
 private:
-    static int AlgoNo;
+
     vector<function<void()>> funcs;
     philosopher() {
         funcs.push_back(funA);
@@ -75,6 +75,7 @@ private:
     }
     ~philosopher(){}
 public:
+    static int AlgoNo;
     // create singleton object
     static philosopher *instance;
     static philosopher *singleton(int i){
