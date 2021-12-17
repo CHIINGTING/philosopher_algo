@@ -80,15 +80,15 @@ private:
 public:
 
     // create singleton object
-    static philosopher *instance;
-    static philosopher *singleton(){
+    philosopher *instance;
+    philosopher *singleton(){
         if(instance){
             return instance;
         }
         instance = new philosopher();
         return instance;
     }
-    static philosopher *singleton(int i){
+    philosopher *singleton(int i){
         if(instance){
             return instance;
         }
