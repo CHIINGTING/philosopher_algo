@@ -111,7 +111,7 @@ auto funA = [](int i, int maxNum) -> void {
         unique_lock<mutex> locker(alock);
 
         while (chopsticks[i]==0 || chopsticks[(i+1)%maxNum]==0){
-            cout<< "philosopher Num: "<< i <<" thread id = "<<this_thread::get_id()<<"is waiting"<<endl;
+            cout<< "philosopher Num: "<< i << "done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<"is waiting"<<endl;
             sem.wait(locker);
         }
 
