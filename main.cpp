@@ -63,17 +63,13 @@ enum algoNum{
 // define philosopher
 class philosopher{
 private:
-    int philNum;
+    size_t philNum;
     vector<function<void()>> funcs;
-    philosopher() {
-        funcs.push_back(funA);
-        funcs.push_back(funB);
-        funcs.push_back(funC);
-    };
+    philosopher() {};
     philosopher(const philosopher& phil){
         funcs = phil.funcs;
     }
-    philosopher(int i) {
+    philosopher(size_t i) {
         funcs.push_back(funA);
         funcs.push_back(funB);
         funcs.push_back(funC);
