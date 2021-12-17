@@ -116,7 +116,7 @@ public:
               chopsticks[current_id % maxNum]
           };*/
         unique_lock<mutex> locker(alock);
-        cout << "Num: "<< philosopher::singleton().philNum <<" thread ID: "<<this_thread::get_id()<<endl;
+        cout << "Num: "<< philosopher::singleton()->philNum <<" thread ID: "<<this_thread::get_id()<<endl;
     };
     function<void()> funB = []() -> void{};
     function<void()> funC = []() -> void{};
