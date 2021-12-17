@@ -135,6 +135,7 @@ auto funA = [](int i, int maxNum) -> void {
         this_thread::sleep_for(s);
     };
     while (true){
+        thinking();
         eating();
         if(eat){
             thinking();
