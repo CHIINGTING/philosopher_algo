@@ -80,15 +80,8 @@ private:
 public:
 
     // create singleton object
-    philosopher *instance;
-    philosopher *singleton(){
-        if(instance){
-            return instance;
-        }
-        instance = new philosopher();
-        return instance;
-    }
-    philosopher *singleton(int i){
+    static philosopher *instance;
+    static philosopher *singleton(int i){
         if(instance){
             return instance;
         }
@@ -116,7 +109,7 @@ public:
               chopsticks[current_id % maxNum]
           };*/
         unique_lock<mutex> locker(alock);
-        cout << "Num: "<< philosopher::singleton()->philNum <<" thread ID: "<<this_thread::get_id()<<endl;
+        cout << "Num: "<< instance->philNum <<" thread ID: "<<this_thread::get_id()<<endl;
     };
     function<void()> funB = []() -> void{};
     function<void()> funC = []() -> void{};
