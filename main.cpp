@@ -118,7 +118,7 @@ auto funA = [](int i, int maxNum) -> void {
         chopsticks[i] = 0;
         chopsticks[(i+1)%maxNum] = 0;
 
-        cout << "philosopher Num: "<< i << "eat number: "<< eat <<" thread id = "<<this_thread::get_id()<<"is eating"<<endl;
+        cout << "philosopher Num: "<< i << " eat number: "<< eat <<" thread id = "<<this_thread::get_id()<<" is eating"<<endl;
         eat++;
         chrono::microseconds s(60000);
         this_thread::sleep_for(s);
