@@ -69,7 +69,7 @@ enum algoNum{
 class philosopher{
 private:
     size_t philNum=0;
-    vector<function<void(int i)>> funcs;
+    vector<function<void(int i, int maxNum)>> funcs;
     philosopher() {};
     philosopher(const philosopher& phil){
         funcs = phil.funcs;
@@ -86,17 +86,17 @@ public:
         return instance;
     }
     //init function algo
-    void add(initializer_list<function<void(int i)>> algo){
+    void add(initializer_list<function<void(int i, int maxNum)>> algo){
         for(auto funAlgo=algo.begin(); funAlgo != algo.end(); funAlgo++){
             funcs.push_back(*funAlgo);
         }
     }
     // add new algo
-    void add(function<void(int i)> algo){
+    void add(function<void(int i, int maxNum)> algo){
         funcs.push_back(algo);
     }
     // get algo method
-    function<void(int i)> get(algoNum i){
+    function<void(int i, int maxNum)> get(algoNum i){
         return funcs[i];
     }
 
@@ -111,8 +111,8 @@ auto funA = [](int i, int maxNum) -> void {
     unique_lock<mutex> locker(alock);
     cout << "Num: "<< i << "maxNum: "<< maxNum <<" thread ID: "<<this_thread::get_id()<<endl;
 };
-auto funB = [](int i) -> void{};
-auto funC = [](int i) -> void{};
+auto funB = [](int i, int maxNum) -> void{};
+auto funC = [](int i, int maxNum) -> void{};
 
 
 philosopher *philosopher::instance;
