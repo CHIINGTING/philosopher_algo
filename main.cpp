@@ -53,6 +53,9 @@ public:
     void operator = (const unsigned int &t){
         m = t;
     }
+    bool operator == (const unsigned int &t){
+        return m==t;
+    }
 };
 vector<semaphore> chopsticks;
 
@@ -103,13 +106,33 @@ public:
 };
 
 auto funA = [](int i, int maxNum) -> void {
-    /*  auto eating = []() -> void {
-          unique_lock<mutex> locker(alock);
-          uint64_t current_id =(uint64_t) this_thread::get_id();
-          chopsticks[current_id % maxNum]
-      };*/
-    unique_lock<mutex> locker(alock);
-    cout << "Num: "<< i << "maxNum: "<< maxNum <<" thread ID: "<<this_thread::get_id()<<endl;
+    auto eating = [=]() -> void {
+        unique_lock<mutex> locker(alock);
+
+        while (chopsticks[i]==0 || chopsticks[(i+1)%maxNum]==0){
+            cout<< "philosopher Num: "<< i <<"thread id = "<<this_thread::get_id()<<"is waiting"<<endl;
+            sem.wait(locker);
+        }
+
+        chopsticks[i] = 0;
+        chopsticks[(i+1)%maxNum] = 0;
+        cout<< "philosopher Num: "<< i <<"thread id = "<<this_thread::get_id()<<"is eating"<<endl;
+    };
+    auto thinking = [=](){
+        alock.lock();
+        chopsticks[i] = 1;
+        chopsticks[(i+1)%maxNum] = 1;
+        sem.notify_all();
+        cout<< "philosopher Num: "<< i <<"thread id = "<<this_thread::get_id()<<"is thinking"<<endl;
+        alock.unlock();
+    };
+    while (true){
+        thinking();
+        chrono::microseconds s(1000);
+        this_thread::sleep_for(s);
+        eating();
+    }
+
 };
 auto funB = [](int i, int maxNum) -> void{};
 auto funC = [](int i, int maxNum) -> void{};
