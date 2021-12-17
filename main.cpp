@@ -136,10 +136,7 @@ auto funA = [](int i, int maxNum) -> void {
     while (eat<10){
         thinking();
         eating();
-        if(eat){
-            thinking();
-            break;
-        }
+
     }
 };
 auto funB = [](int i, int maxNum) -> void{};
