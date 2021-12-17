@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/deep.huang/Desktop/OOP_project/test/main.cpp
+iostream
+-
+pthread.h
+-
+functional
+-
+vector
+-
+thread
+-
+mutex
+-
+condition_variable
+-
+
