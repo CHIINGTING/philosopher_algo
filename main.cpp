@@ -95,7 +95,7 @@ public:
     }
 };
 
-auto funA = []() -> void{
+function<void()> funA = []() -> void{
   /*  auto eating = []() -> void {
         unique_lock<mutex> locker(alock);
         uint64_t current_id =(uint64_t) this_thread::get_id();
@@ -104,8 +104,8 @@ auto funA = []() -> void{
   unique_lock<mutex> locker(alock);
   cout <<"thread ID:"<<this_thread::get_id()<<endl;
 };
-auto funB = []() -> void{};
-auto funC = []() -> void{};
+function<void()> funB = []() -> void{};
+function<void()> funC = []() -> void{};
 
 philosopher *philosopher::instance;
 int main(){
