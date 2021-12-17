@@ -112,7 +112,7 @@ public:
               chopsticks[current_id % maxNum]
           };*/
         unique_lock<mutex> locker(alock);
-        cout << "Num: "<< AlgoNo <<"thread ID:"<<this_thread::get_id()<<endl;
+        cout << "Num: "<< instance->philNum <<"thread ID:"<<this_thread::get_id()<<endl;
     };
     function<void()> funB = []() -> void{};
     function<void()> funC = []() -> void{};
