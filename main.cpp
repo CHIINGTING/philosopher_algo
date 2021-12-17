@@ -78,11 +78,11 @@ private:
     };
     ~philosopher(){}
 public:
-
     // create singleton object
     static philosopher *instance;
     static philosopher *singleton(int i){
         if(instance){
+            instance->philNum = i;
             return instance;
         }
         instance = new philosopher(i);
