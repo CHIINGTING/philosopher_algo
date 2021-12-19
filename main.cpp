@@ -60,6 +60,10 @@ public:
     bool operator == (const unsigned int &t){
         return m==t;
     }
+    semaphore& operator = (semaphore& semaph){
+        m=semaph.m;
+        return semaph;
+    }
 };
 vector<semaphore> chopsticks;
 
