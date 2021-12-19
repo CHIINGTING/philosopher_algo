@@ -12,14 +12,12 @@ think 5-10 sec
 n = 3-11 create philosopher
  */
 #include <iostream>
-#include <pthread.h>
 #include <functional>
 #include <vector>
 #include <thread>
 #include <mutex>
 #include <typeinfo>
-#include <condition_variable>
-#include <random>
+
 using namespace std;
 unsigned int maxNum;
 
@@ -64,10 +62,6 @@ public:
     }
     bool operator == (const unsigned int &t){
         return m==t;
-    }
-    semaphore& operator = (semaphore& semaph){
-        m=semaph.m;
-        return semaph;
     }
 };
 vector<semaphore> chopsticks;
