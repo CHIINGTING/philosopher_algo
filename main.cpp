@@ -36,6 +36,11 @@ public:
     semaphore(const semaphore& sema){
         m=sema.m;
     }
+
+    unsigned int getValue(){
+        return m;
+    }
+
     //semaphore wait
     void down(){
         unique_lock<mutex> locker(alock);
@@ -81,7 +86,7 @@ enum algoNum{
 class philosopher{
 private:
     size_t philNum=0;
-    vector<function<void(int i, int maxNum, semaphore &user)>> funcs;
+    vector<function<void(int i, int maxNum, unsigned int &user)>> funcs;
     philosopher() {};
     philosopher(const philosopher& phil){
         funcs = phil.funcs;
@@ -97,18 +102,19 @@ public:
         instance = new philosopher();
         return instance;
     }
+
     //init function algo
-    void add(initializer_list<function<void(int i, int maxNum, semaphore &user)>> algo){
+    void add(initializer_list<function<void(int i, int maxNum, unsigned int &user)>> algo){
         for(auto funAlgo=algo.begin(); funAlgo != algo.end(); funAlgo++){
             funcs.push_back(*funAlgo);
         }
     }
     // add new algo
-    void add(function<void(int i, int maxNum, semaphore &user)> algo){
+    void add(function<void(int i, int maxNum, unsigned int &user)> algo){
         funcs.push_back(algo);
     }
     // get algo method
-    function<void(int i, int maxNum, semaphore &user)> get(algoNum i){
+    function<void(int i, int maxNum, unsigned int &user)> get(algoNum i){
         return funcs[i];
     }
 
@@ -116,10 +122,10 @@ public:
 
 
 // algo
-auto funA = [](int i, int maxNum, semaphore &user) -> void{
+auto funA = [](int i, int maxNum, unsigned int &user) -> void{
 
 };
-auto funB = [](int i, int maxNum, semaphore &user) -> void{
+auto funB = [](int i, int maxNum, unsigned int &user) -> void{
     auto grabRightChopstick = [&](int id,int eat) -> void{
         alock.lock();
         chopsticks[id].down();
@@ -150,7 +156,9 @@ auto funB = [](int i, int maxNum, semaphore &user) -> void{
         alock.unlock();
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
     };
-    user.down();
+    alock.lock();
+    user --;
+    alock.unlock();
     int eat = 0;
     int id = i;
     while (eat<10){
@@ -171,7 +179,7 @@ auto funB = [](int i, int maxNum, semaphore &user) -> void{
     }
 };
 
-auto funC = [](int i, int maxNum, semaphore &user) -> void {
+auto funC = [](int i, int maxNum, unsigned int &user) -> void {
     int eat= 0;
     auto eating = [&]() -> void {
         unique_lock<mutex> locker(alock);
@@ -231,17 +239,17 @@ int main(){
     switch (chooseAlgo) {
         case 1:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(thread(philosopher::singleton()->get(method1), i, maxNum, user));
+                phils.emplace_back(thread(philosopher::singleton()->get(method1), i, maxNum, user.getValue()));
             }
             break;
         case 2:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(philosopher::singleton()->get(method2), i, maxNum, user);
+                phils.emplace_back(philosopher::singleton()->get(method2), i, maxNum, user.getValue());
             }
             break;
         case 3:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(philosopher::singleton()->get(method3), i, maxNum, user);
+                phils.emplace_back(philosopher::singleton()->get(method3), i, maxNum, user.getValue());
             }
             break;
         default:
