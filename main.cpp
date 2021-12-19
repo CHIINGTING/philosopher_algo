@@ -154,13 +154,14 @@ auto funB = [](int i, int maxNum, semaphore &user) -> void{
         if (id%2){
             grabLeftChopstick(i,eat);
             grabRightChopstick(i,eat);
-            eating(i,eat)
-
+            eating(i,eat);
+            thinking();
 
         } else{
             grabRightChopstick(i,eat);
             grabLeftChopstick(i,eat);
-
+            eating(i,eat);
+            thinking();
         }
 
     }
