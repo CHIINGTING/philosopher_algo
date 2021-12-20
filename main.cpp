@@ -46,14 +46,10 @@ public:
             cout << "(thread id ="<<&this_thread::get_id<<"is waiting)"<<endl;
             sem.wait(locker);
         }
-        alock.lock();
         m--;
-        alock.unlock();
     }
     void signal() {
-        alock.lock();
         m++;
-        sem.notify_all();
         alock.unlock();
     }
     void operator = (const unsigned int &t){
