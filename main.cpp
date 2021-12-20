@@ -145,6 +145,7 @@ auto funA = [](int id, int maxNum) -> void{
         alock.unlock();
     };
     while(eat < 10){
+        cout<< "this is method 1"<<endl;
         eating();
         thinking();
     }
