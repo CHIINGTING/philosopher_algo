@@ -17,6 +17,7 @@ n = 3-11 create philosopher
 #include <thread>
 #include <mutex>
 #include <typeinfo>
+#include <condition_variable>
 
 using namespace std;
 unsigned int maxNum;
