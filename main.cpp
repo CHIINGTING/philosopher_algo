@@ -126,22 +126,21 @@ auto funA = [](int id, int maxNum) -> void{
     auto eating = [=]() -> void{
         unique_lock<mutex> locker(alock);
         while (chopsticks[id]==0){
-            alock.lock();
-            chopsticks[id].wait();
-            cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is eating"<<endl;
-            this_thread::sleep_for(chrono::seconds(random()%5));
-            chopsticks[id].signal();
-            alock.unlock();
+            cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is waiting"<<endl;
+            sem.wait(locker);
         }
+        alock.lock();
+        chopsticks[id].wait();
+        cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is eating"<<endl;
+        this_thread::sleep_for(chrono::seconds(random()%5));
+        chopsticks[id].signal();
+        alock.unlock();
     };
     auto thinking = [=]() -> void{
-        unique_lock<mutex> locker(alock);
-        while (chopsticks[id]==0){
-            alock.lock();
-            cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is thinking"<<endl;
-            this_thread::sleep_for(chrono::seconds(random()%10));
-            alock.unlock();
-        }
+        alock.lock();
+        cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is thinking"<<endl;
+        this_thread::sleep_for(chrono::seconds(random()%10));
+        alock.unlock();
     };
     while(eat < 10){
         eating();
