@@ -211,7 +211,6 @@ auto funC = [](int i, int maxNum) -> void {
             cout<< "philosopher Num: "<< i << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is waiting"<<endl;
             sem.wait(locker);
         }
-        alock.lock();
         chopsticks[i].down();
         chopsticks[(i + 1) % maxNum].down();
         cout << "philosopher Num: "<< i << " eat number: "<< eat+1 <<" thread id = "<<this_thread::get_id()<<" is eating"<<endl;
@@ -220,7 +219,6 @@ auto funC = [](int i, int maxNum) -> void {
         chopsticks[i].up();
         chopsticks[(i + 1) % maxNum].up();
         sem.notify_all();
-        alock.unlock();
     };
     auto thinking = [=](){
         alock.lock();
