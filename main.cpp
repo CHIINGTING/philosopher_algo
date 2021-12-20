@@ -123,7 +123,8 @@ public:
 // algo
 auto funA = [](int id, int maxNum) -> void{
     int eat=0;
-    auto eating = [=]() -> void{
+    auto eating = [&]() -> void{
+
         unique_lock<mutex> locker(alock);
         while (chopsticks[id]==0){
             cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is waiting"<<endl;
@@ -134,6 +135,7 @@ auto funA = [](int id, int maxNum) -> void{
         cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is eating"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
         chopsticks[id].signal();
+        eat++;
         alock.unlock();
     };
     auto thinking = [=]() -> void{
