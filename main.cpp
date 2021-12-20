@@ -18,6 +18,7 @@ n = 3-11 create philosopher
 #include <mutex>
 #include <typeinfo>
 #include <condition_variable>
+#include <mutex>
 
 using namespace std;
 unsigned int maxNum;
@@ -49,6 +50,7 @@ public:
         m--;
     }
     void signal() {
+        alock.lock();
         m++;
         alock.unlock();
     }
@@ -128,20 +130,16 @@ auto funA = [](int id, int maxNum) -> void{
         }
         cout<< "in eating"<<endl;
         cout<< "chopsticks["<<id<<"].wait();"<<endl;
-        alock.lock();
         cout<< "in eating alock"<<endl;
         chopsticks[id].wait();
         cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is eating"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
         chopsticks[id].signal();
         eat++;
-        alock.unlock();
     };
     auto thinking = [=]() -> void{
-        alock.lock();
         cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is thinking"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%10));
-        alock.unlock();
     };
     while(eat < 10){
         cout<< "this is method 1"<<endl;
