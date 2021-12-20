@@ -1,7 +1,7 @@
 /* Algo No.
 1. m=1 wait() for grab res, signal() for release res
 2. m=2 odd-num grab left res first, and then right res. even-num grab right res, and then left res.
-3. m=3 only pick up both resource.
+3. m=3 only pick signal both resource.
 */
 /* Algo detail
 start 1-5 sec
@@ -34,13 +34,10 @@ public:
     semaphore(const semaphore& sema){
         m=sema.m;
     }
-
-    unsigned int getValue(){
-        return m;
-    }
+    
 
     //semaphore wait
-    void down(){
+    void wait(){
         unique_lock<mutex> locker(alock);
         while(m==0){
             //use condition_variable stop thread
@@ -51,7 +48,7 @@ public:
         m--;
         alock.unlock();
     }
-    void up() {
+    void signal() {
         alock.lock();
         m++;
         sem.notify_all();
@@ -61,10 +58,16 @@ public:
         m = t;
     }
     bool operator == (const unsigned int &t){
-        return m==t;
+        return this->m == t;
+    }
+    unsigned int& operator -(const unsigned int &t){
+        this->m = this->m-t;
+        return this->m;
     }
 };
+
 vector<semaphore> chopsticks;
+semaphore user;
 
 
 // algo method No.
@@ -80,7 +83,7 @@ enum algoNum{
 class philosopher{
 private:
     size_t philNum=0;
-    vector<function<void(int i, int maxNum, unsigned int &user)>> funcs;
+    vector<function<void(int i, int maxNum)>> funcs;
     philosopher() {};
     philosopher(const philosopher& phil){
         funcs = phil.funcs;
@@ -98,17 +101,17 @@ public:
     }
 
     //init function algo
-    void add(initializer_list<function<void(int i, int maxNum, unsigned int &user)>> algo){
+    void add(initializer_list<function<void(int i, int maxNum)>> algo){
         for(auto funAlgo=algo.begin(); funAlgo != algo.end(); funAlgo++){
             funcs.push_back(*funAlgo);
         }
     }
     // add new algo
-    void add(function<void(int i, int maxNum, unsigned int &user)> algo){
+    void add(function<void(int i, int maxNum)> algo){
         funcs.push_back(algo);
     }
     // get algo method
-    function<void(int i, int maxNum, unsigned int &user)> get(algoNum i){
+    function<void(int i, int maxNum)> get(algoNum i){
         return funcs[i];
     }
 
@@ -116,20 +119,46 @@ public:
 
 
 // algo
-auto funA = [](int i, int maxNum, unsigned int &user) -> void{
+auto funA = [](int id, int maxNum) -> void{
+    int eat=0;
+    auto eating = [=]() -> void{
+        unique_lock<mutex> locker(alock);
+        while (chopsticks[id]==0){
+            alock.lock();
+            chopsticks[id].wait();
+            cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is eating"<<endl;
+            this_thread::sleep_for(chrono::seconds(random()%5));
+            chopsticks[id].signal();
+            alock.unlock();
+        }
+    };
+    auto thinking = [=]() -> void{
+        unique_lock<mutex> locker(alock);
+        while (chopsticks[id]==0){
+            alock.lock();
+            cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is thinking"<<endl;
+            this_thread::sleep_for(chrono::seconds(random()%10));
+            alock.unlock();
+        }
+    };
+    while(eat < 10){
+        eating();
+        thinking();
+    }
 
 };
-auto funB = [](int i, int maxNum, unsigned int &user) -> void{
+
+auto funB = [](int i, int maxNum) -> void{
     auto grabRightChopstick = [&](int id,int eat) -> void{
         alock.lock();
-        chopsticks[id].down();
+        chopsticks[id].wait();
         cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is grabing right chopstick"<<endl;
         alock.unlock();
         this_thread::sleep_for(chrono::seconds(random()%5));
     };
     auto grabLeftChopstick = [&](int id,int eat) -> void {
         alock.lock();
-        chopsticks[(id+1)%maxNum].down();
+        chopsticks[(id + 1) % maxNum].wait();
         cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is grabing right chopstick"<<endl;
         alock.unlock();
         this_thread::sleep_for(chrono::seconds(random()%5));
@@ -138,8 +167,8 @@ auto funB = [](int i, int maxNum, unsigned int &user) -> void{
         unique_lock<mutex> locker(alock);
         alock.lock();
         cout<< "philosopher Num: "<< i << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is waiting"<<endl;
-        chopsticks[(id+1)%maxNum].up();
-        chopsticks[(id)%maxNum].up();
+        chopsticks[(id + 1) % maxNum].signal();
+        chopsticks[(id) % maxNum].signal();
         alock.unlock();
         this_thread::sleep_for(chrono::seconds(random()%5));
     };
@@ -151,7 +180,7 @@ auto funB = [](int i, int maxNum, unsigned int &user) -> void{
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
     };
     alock.lock();
-    user --;
+    user-1;
     alock.unlock();
     int eat = 0;
     int id = i;
@@ -173,7 +202,7 @@ auto funB = [](int i, int maxNum, unsigned int &user) -> void{
     }
 };
 
-auto funC = [](int i, int maxNum, unsigned int &user) -> void {
+auto funC = [](int i, int maxNum) -> void {
     int eat= 0;
     auto eating = [&]() -> void {
         unique_lock<mutex> locker(alock);
@@ -183,13 +212,13 @@ auto funC = [](int i, int maxNum, unsigned int &user) -> void {
             sem.wait(locker);
         }
         alock.lock();
-        chopsticks[i].down();
-        chopsticks[(i+1)%maxNum].down();
+        chopsticks[i].wait();
+        chopsticks[(i + 1) % maxNum].wait();
         cout << "philosopher Num: "<< i << " eat number: "<< eat+1 <<" thread id = "<<this_thread::get_id()<<" is eating"<<endl;
         eat++;
         std::this_thread::sleep_for(chrono::seconds(random()%5));
-        chopsticks[i].up();
-        chopsticks[(i+1)%maxNum].up();
+        chopsticks[i].signal();
+        chopsticks[(i + 1) % maxNum].signal();
         sem.notify_all();
         alock.unlock();
     };
@@ -208,8 +237,6 @@ auto funC = [](int i, int maxNum, unsigned int &user) -> void {
     }
 };
 
-
-static semaphore user;
 philosopher *philosopher::instance;
 int main(){
     // 加入3種演算法
@@ -233,17 +260,17 @@ int main(){
     switch (chooseAlgo) {
         case 1:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(thread(philosopher::singleton()->get(method1), i, maxNum, user.getValue()));
+                phils.emplace_back(thread(philosopher::singleton()->get(method1), i, maxNum));
             }
             break;
         case 2:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(philosopher::singleton()->get(method2), i, maxNum, user.getValue());
+                phils.emplace_back(thread(philosopher::singleton()->get(method2), i, maxNum));
             }
             break;
         case 3:
             for(size_t i=0; i<maxNum;i++){
-                phils.emplace_back(philosopher::singleton()->get(method3), i, maxNum, user.getValue());
+                phils.emplace_back(thread(philosopher::singleton()->get(method3), i, maxNum));
             }
             break;
         default:
