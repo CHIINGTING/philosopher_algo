@@ -142,8 +142,8 @@ auto funA = [](int id, int maxNum) -> void{
     };
     while(eat < 10){
         cout<< "this is method 1"<<endl;
-        eating();
         thinking();
+        eating();
     }
 
 };
