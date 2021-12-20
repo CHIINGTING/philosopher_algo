@@ -131,6 +131,7 @@ auto funA = [](int id, int maxNum) -> void{
             sem.wait(locker);
         }
         cout<< "in eating"<<endl;
+        cout<< "chopsticks["<<id<<"].wait();"<<endl;
         alock.lock();
         chopsticks[id].wait();
         cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is eating"<<endl;
