@@ -48,7 +48,7 @@ public:
        // cout << "after locker semaphore wait"<<endl;
         while(m==0){
             //use condition_variable stop thread
-            cout << "(thread id ="<< this_thread::get_id() <<" is waiting)"<<endl;
+          //  cout << "(thread id ="<< this_thread::get_id() <<" is waiting)"<<endl;
             sem.wait(locker);
         }
         m--;
@@ -187,7 +187,7 @@ auto funA = [](int id, int maxNum) -> void{
         this_thread::sleep_for(chrono::seconds(random()%5+5));
         //cout<< "done thinking"<<endl;
     };
-    while(eat < 3){
+    while(eat < 10){
         single.wait(id);
        // cout<< "this is method 1"<<endl;
         eating();
@@ -259,7 +259,7 @@ auto funB = [](int id, int maxNum) -> void{
     };
     // the philosopher join meal Number
 
-    while (eat<3){
+    while (eat<10){
         user.wait(id);
         if (id%2){
             grabLeftChopstick();
@@ -314,7 +314,7 @@ auto funC = [](int id, int maxNum) -> void {
         sem.notify_all();
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
     };
-    while (eat<3){
+    while (eat<10){
         grabChopsticks();
         eating();
         thinking();
