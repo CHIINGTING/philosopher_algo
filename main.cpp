@@ -297,6 +297,7 @@ auto funC = [](int id, int maxNum) -> void {
             sem.wait(locker);
         }
         alock.lock();
+        cout << "philosopher Num: " << id +1 << " thread id = " << this_thread::get_id() << " is grabing" << endl;
         chopsticks[id]=0;
         chopsticks[(id + 1) % maxNum]=0;
         alock.unlock();
