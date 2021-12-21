@@ -254,8 +254,6 @@ auto funC = [](int id, int maxNum) -> void {
     };
     auto thinking = [=](){
         cout << "philosopher Num: " << id << " thread id = " << this_thread::get_id() << "is thinking" << endl;
-        chrono::microseconds s(20000);
-        this_thread::sleep_for(s);
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
     };
     while (eat<10){
