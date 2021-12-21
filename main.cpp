@@ -210,7 +210,7 @@ auto funB = [](int id, int maxNum) -> void{
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
     };
     // the philosopher join meal Number
-    user.wait(int id);
+    user.wait(id);
 
     while (eat<10){
 
