@@ -71,6 +71,15 @@ public:
     void signal() {
         cout<<"in singal"<<endl;
         alock.lock();
+        cout<<"in singal lock"<<endl;
+        m++;
+        sem.notify_all();
+        alock.unlock();
+    }
+    void signal(int id) {
+        cout<<"in singal"<<endl;
+        alock.lock();
+        cout<<"in singal lock"<<endl;
         m++;
         sem.notify_all();
         alock.unlock();
@@ -180,14 +189,13 @@ auto funA = [](int id, int maxNum) -> void{
         alock.unlock();
         this_thread::sleep_for(chrono::seconds(random()%5+5));
         cout<< "done thinking"<<endl;
-        sem.notify_all();
     };
     while(eat < 10){
-        single.wait();
+        single.wait(id);
     //    cout<< "this is method 1"<<endl;
         eating();
         thinking();
-        single.signal();
+        single.signal(id);
     }
     alock.lock();
     cout << "the philosopher: "<<id+1<< " end he meal"<<endl;
