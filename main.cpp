@@ -179,6 +179,7 @@ auto funA = [](int id, int maxNum) -> void{
         alock.unlock();
         this_thread::sleep_for(chrono::seconds(random()%5+5));
         cout<< "done thinking"<<endl;
+        sem.notify_all();
     };
     while(eat < 10){
         single.wait();
