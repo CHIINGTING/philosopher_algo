@@ -57,7 +57,7 @@ public:
     void wait(int id){
         cout << "before locker semaphore wait"<<endl;
         unique_lock<mutex> locker(alock);
-        // cout << "after locker semaphore wait"<<endl;
+        cout << "after locker semaphore wait"<<endl;
         while(m==0){
             //use condition_variable stop thread
             cout << "the philosopher: "<< id << " thread id ="<< this_thread::get_id() <<" is waiting"<<endl;
@@ -66,7 +66,7 @@ public:
         alock.lock();
         m--;
         alock.unlock();
-        //cout << "semaphore wait"<<endl;
+        cout << "semaphore wait"<<endl;
     }
     void signal() {
         cout<<"in singal"<<endl;
