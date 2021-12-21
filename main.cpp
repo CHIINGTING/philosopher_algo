@@ -1,7 +1,7 @@
 /* Algo No.
 1. m=1 wait() for grab res, signal() for release res
 2. m=2 odd-num grab left res first, and then right res. even-num grab right res, and then left res.
-3. m=3 only pick up both resource.
+3. m=3 only pick signal both resource.
 */
 /* Algo detail
 start 1-5 sec
@@ -43,19 +43,19 @@ public:
     
 
     //semaphore wait
-    void down(){
-        cout << "before locker semaphore down"<<endl;
+    void wait(){
+        cout << "before locker semaphore wait"<<endl;
         unique_lock<mutex> locker(alock);
-        cout << "after locker semaphore down"<<endl;
+        cout << "after locker semaphore wait"<<endl;
         while(m==0){
             //use condition_variable stop thread
             cout << "(thread id ="<<&this_thread::get_id<<"is waiting)"<<endl;
             sem.wait(locker);
         }
         m--;
-        cout << "semaphore down"<<endl;
+        cout << "semaphore wait"<<endl;
     }
-    void up() {
+    void signal() {
         alock.lock();
         m++;
         alock.unlock();
@@ -136,10 +136,10 @@ auto funA = [](int id, int maxNum) -> void{
         }
         cout<< "in eating"<<endl;
         cout<< "chopsticks["<<id<<"].wait();"<<endl;
-        chopsticks[id].down();
+        chopsticks[id].wait();
         cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is eating"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
-        chopsticks[id].up();
+        chopsticks[id].signal();
         eat++;
     };
     auto thinking = [&]() -> void{
@@ -157,14 +157,14 @@ auto funA = [](int id, int maxNum) -> void{
 auto funB = [](int i, int maxNum) -> void{
     auto grabRightChopstick = [&](int id,int eat) -> void{
         alock.lock();
-        chopsticks[id].down();
+        chopsticks[id].wait();
         cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is grabing right chopstick"<<endl;
         alock.unlock();
         this_thread::sleep_for(chrono::seconds(random()%5));
     };
     auto grabLeftChopstick = [&](int id,int eat) -> void {
         alock.lock();
-        chopsticks[(id + 1) % maxNum].down();
+        chopsticks[(id + 1) % maxNum].wait();
         cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is grabing right chopstick"<<endl;
         alock.unlock();
         this_thread::sleep_for(chrono::seconds(random()%5));
@@ -173,8 +173,8 @@ auto funB = [](int i, int maxNum) -> void{
         unique_lock<mutex> locker(alock);
         alock.lock();
         cout<< "philosopher Num: "<< i << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is waiting"<<endl;
-        chopsticks[(id + 1) % maxNum].up();
-        chopsticks[(id) % maxNum].up();
+        chopsticks[(id + 1) % maxNum].signal();
+        chopsticks[(id) % maxNum].signal();
         alock.unlock();
         this_thread::sleep_for(chrono::seconds(random()%5));
     };
@@ -217,13 +217,13 @@ auto funC = [](int i, int maxNum) -> void {
             cout<< "philosopher Num: "<< i << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is waiting"<<endl;
             sem.wait(locker);
         }
-        chopsticks[i].down();
-        chopsticks[(i + 1) % maxNum].down();
+        chopsticks[i].wait();
+        chopsticks[(i + 1) % maxNum].wait();
         cout << "philosopher Num: "<< i << " eat number: "<< eat+1 <<" thread id = "<<this_thread::get_id()<<" is eating"<<endl;
         eat++;
         std::this_thread::sleep_for(chrono::seconds(random()%5));
-        chopsticks[i].up();
-        chopsticks[(i + 1) % maxNum].up();
+        chopsticks[i].signal();
+        chopsticks[(i + 1) % maxNum].signal();
         sem.notify_all();
     };
     auto thinking = [=](){
