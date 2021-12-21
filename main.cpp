@@ -248,7 +248,7 @@ auto funB = [](int id, int maxNum) -> void{
         cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is releasing left chopstick"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
         alock.unlock();
-        sem.notify_all();
+        //sem.notify_all();
     };
     auto thinking = [=]()-> void {
         alock.lock();
