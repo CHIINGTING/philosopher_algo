@@ -55,7 +55,7 @@ public:
         //cout << "semaphore wait"<<endl;
     }
     void wait(int id){
-        //cout << "before locker semaphore wait"<<endl;
+        cout << "before locker semaphore wait"<<endl;
         unique_lock<mutex> locker(alock);
         // cout << "after locker semaphore wait"<<endl;
         while(m==0){
