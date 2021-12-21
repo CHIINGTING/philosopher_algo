@@ -257,9 +257,11 @@ auto funC = [](int id, int maxNum) -> void {
         cout << "philosopher Num: " << id << " thread id = " << this_thread::get_id() << "is thinking" << endl;
         alock.unlock();
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
+
     };
     while (eat<10){
         thinking();
+        cout<<"end thinking";
         eating();
     }
     cout << "the philosopher: "<<id+1<< " end he meal"<<endl;
