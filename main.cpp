@@ -222,28 +222,28 @@ auto funB = [](int id, int maxNum) -> void{
     cout << "the ["<<id+1<< "] end he meal"<<endl;
 };
 
-auto funC = [](int i, int maxNum) -> void {
+auto funC = [](int id, int maxNum) -> void {
     int eat= 0;
     auto eating = [&]() -> void {
         unique_lock<mutex> locker(alock);
 
-        while (chopsticks[i]==0 || chopsticks[(i+1)%maxNum]==0){
-            cout<< "philosopher Num: "<< i << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is waiting"<<endl;
+        while (chopsticks[id] == 0 || chopsticks[(id + 1) % maxNum] == 0){
+            cout << "philosopher Num: " << id << " done eat :" << eat + 1 << " thread id = " << this_thread::get_id() << "is waiting" << endl;
             sem.wait(locker);
         }
-        chopsticks[i].wait();
-        chopsticks[(i + 1) % maxNum].wait();
-        cout << "philosopher Num: "<< i << " eat number: "<< eat+1 <<" thread id = "<<this_thread::get_id()<<" is eating"<<endl;
+        chopsticks[id].wait();
+        chopsticks[(id + 1) % maxNum].wait();
+        cout << "philosopher Num: " << id << " eat number: " << eat + 1 << " thread id = " << this_thread::get_id() << " is eating" << endl;
         eat++;
         std::this_thread::sleep_for(chrono::seconds(random()%5));
-        chopsticks[i].signal();
-        chopsticks[(i + 1) % maxNum].signal();
+        chopsticks[id].signal();
+        chopsticks[(id + 1) % maxNum].signal();
         sem.notify_all();
     };
     auto thinking = [=](){
         alock.lock();
         sem.notify_all();
-        cout<< "philosopher Num: "<< i <<" thread id = "<<this_thread::get_id()<<"is thinking"<<endl;
+        cout << "philosopher Num: " << id << " thread id = " << this_thread::get_id() << "is thinking" << endl;
         alock.unlock();
         chrono::microseconds s(20000);
         this_thread::sleep_for(s);
