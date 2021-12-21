@@ -151,6 +151,14 @@ auto funA = [](int id, int maxNum) -> void{
     //   cout<< "in eating"<<endl;
    //     cout<< "chopsticks["<<id<<"].wait();"<<endl;
         chopsticks[id].wait();
+        while (chopsticks[(id+1)%maxNum]==0){
+            unique_lock<mutex> locker(alock);
+            alock.lock();
+            cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
+            alock.unlock();
+            sem.wait(locker);
+        }
+        chopsticks[(id+1)%maxNum].wait();
         alock.lock();
         cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" is eating"<<endl;
         alock.unlock();
