@@ -187,7 +187,7 @@ auto funB = [](int i, int maxNum) -> void{
         chopsticks[(id) % maxNum].signal();
         cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is grabing left chopstick"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
-    }
+    };
     auto thinking = [=](int i, int eat)-> void {
         cout<< "philosopher Num: "<< i <<" thread id = "<<this_thread::get_id()<<"is thinking"<<endl;
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
