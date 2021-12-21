@@ -205,7 +205,7 @@ auto funB = [](int i, int maxNum) -> void{
             eating(i,eat);
             realseLeftChopstick(i, eat);
             realseRightChopstick(i, eat);
-            thinking();
+            thinking(i, eat);
 
         } else{
             grabRightChopstick(i,eat);
