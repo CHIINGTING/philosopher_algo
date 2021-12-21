@@ -48,7 +48,7 @@ public:
        // cout << "after locker semaphore wait"<<endl;
         while(m==0){
             //use condition_variable stop thread
-            cout << "(thread id ="<< this_thread::get_id() <<"is waiting)"<<endl;
+            cout << "(thread id ="<< this_thread::get_id() <<" is waiting)"<<endl;
             sem.wait(locker);
         }
         m--;
@@ -273,7 +273,7 @@ auto funC = [](int id, int maxNum) -> void {
     auto eating = [&]() -> void {
         //unique_lock<mutex> locker(alock);
         while (chopsticks[id] == 0 || chopsticks[(id + 1) % maxNum] == 0){
-            cout << "philosopher Num: " << id+1 << " done eat :" << eat + 1 << " thread id = " << this_thread::get_id() << "is waiting" << endl;
+            cout << "philosopher Num: " << id+1 << " done eat :" << eat << " thread id = " << this_thread::get_id() << " is waiting" << endl;
             sem.wait(locker);
         }
         chopsticks[id].wait(id);
@@ -283,7 +283,7 @@ auto funC = [](int id, int maxNum) -> void {
         eat++;
         std::this_thread::sleep_for(chrono::seconds(random()%5));
         alock.unlock();
-        chopsticks[id].signal(id);
+        chopsticks[id].signal();
         chopsticks[(id + 1) % maxNum].signal();
         alock.lock();
         cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" done eating and he eat: " << eat << " times." <<endl;
