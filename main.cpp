@@ -43,6 +43,7 @@ public:
     void down(){
         cout << "before locker semaphore down"<<endl;
         unique_lock<mutex> locker(alock);
+        cout << "after locker semaphore down"<<endl;
         while(m==0){
             //use condition_variable stop thread
             cout << "(thread id ="<<&this_thread::get_id<<"is waiting)"<<endl;
