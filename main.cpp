@@ -174,7 +174,7 @@ auto funB = [](int i, int maxNum) -> void{
         cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is grabing left chopstick"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
     };
-    auto eating = [=](int id,int eat) -> void {
+    auto eating = [&](int id,int eat) -> void {
         cout<< "philosopher Num: "<< i << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is eating "<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
         eat = eat +1;
