@@ -55,9 +55,9 @@ public:
         //cout << "semaphore wait"<<endl;
     }
     void wait(int id){
-        cout << "before locker semaphore wait"<<endl;
+        //cout << "before locker semaphore wait"<<endl;
         //unique_lock<mutex> locker(alock);
-        cout << "after locker semaphore wait"<<endl;
+       // cout << "after locker semaphore wait"<<endl;
         while(m==0){
             //use condition_variable stop thread
             cout << "the philosopher: "<< id+1 << " thread id ="<< this_thread::get_id() <<" is waiting"<<endl;
@@ -69,17 +69,17 @@ public:
         cout << "semaphore wait"<<endl;
     }
     void signal() {
-        cout<<"in singal"<<endl;
+      //  cout<<"in singal"<<endl;
         alock.lock();
-        cout<<"in singal lock"<<endl;
+      //  cout<<"in singal lock"<<endl;
         m++;
         sem.notify_all();
         alock.unlock();
     }
     void signal(int id) {
-        cout<<"in singal"<<endl;
+       // cout<<"in singal"<<endl;
         alock.lock();
-        cout<<"in singal lock"<<endl;
+      //  cout<<"in singal lock"<<endl;
         m++;
         sem.notify_all();
         alock.unlock();
@@ -196,7 +196,7 @@ auto funA = [](int id, int maxNum) -> void{
         single.signal(id);
     }
     alock.lock();
-    cout << "the philosopher: "<<id+1<< " end he meal"<<endl;
+    cout << "the philosopher: "<<id+1<< " end his meal"<<endl;
     alock.unlock();
 };
 
@@ -265,7 +265,7 @@ auto funB = [](int id, int maxNum) -> void{
         user.signal();
     }
 
-    cout << "the philosopher: "<<id+1<< " end he meal"<<endl;
+    cout << "the philosopher: "<<id+1<< " end his meal"<<endl;
 };
 
 auto funC = [](int id, int maxNum) -> void {
@@ -293,7 +293,7 @@ auto funC = [](int id, int maxNum) -> void {
         thinking();
 
     }
-    cout << "the philosopher: "<<id+1<< " end he meal"<<endl;
+    cout << "the philosopher: "<<id+1<< " end his meal"<<endl;
 };
 
 philosopher *philosopher::instance;
