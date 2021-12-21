@@ -69,6 +69,7 @@ public:
         //cout << "semaphore wait"<<endl;
     }
     void signal() {
+        cout<<"in singal"<<endl;
         alock.lock();
         m++;
         sem.notify_all();
@@ -175,7 +176,7 @@ auto funA = [](int id, int maxNum) -> void{
     };
     auto thinking = [&]() -> void{
         alock.lock();
-        cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<" is thinking"<<endl;
+        cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<" is thinking"<<endl;
         alock.unlock();
         this_thread::sleep_for(chrono::seconds(random()%5+5));
         cout<< "done thinking"<<endl;
