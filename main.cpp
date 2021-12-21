@@ -26,7 +26,7 @@ unsigned int maxNum;
 //global
 mutex alock;
 std::condition_variable sem;
-
+unique_lock<mutex> locker(alock);
 //define semaphore
 class semaphore{
 private:
@@ -44,7 +44,7 @@ public:
     //semaphore wait
     void wait(){
         //cout << "before locker semaphore wait"<<endl;
-        unique_lock<mutex> locker(alock);
+        //unique_lock<mutex> locker(alock);
        // cout << "after locker semaphore wait"<<endl;
         while(m==0){
             //use condition_variable stop thread
@@ -56,7 +56,7 @@ public:
     }
     void wait(int id){
         cout << "before locker semaphore wait"<<endl;
-        unique_lock<mutex> locker(alock);
+        //unique_lock<mutex> locker(alock);
         cout << "after locker semaphore wait"<<endl;
         while(m==0){
             //use condition_variable stop thread
@@ -272,7 +272,7 @@ auto funC = [](int id, int maxNum) -> void {
     int eat = 0;
     auto eating = [&]() -> void {
         cout << "in eating"<< endl;
-        unique_lock<mutex> locker(alock);
+        //unique_lock<mutex> locker(alock);
         while (chopsticks[id] == 0 || chopsticks[(id + 1) % maxNum] == 0){
             cout << "philosopher Num: " << id << " done eat :" << eat + 1 << " thread id = " << this_thread::get_id() << "is waiting" << endl;
             sem.wait(locker);
