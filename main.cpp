@@ -44,7 +44,7 @@ public:
     //semaphore wait
     void wait(){
         //cout << "before locker semaphore wait"<<endl;
-        unique_lock<mutex> locker(alock);
+       // unique_lock<mutex> locker(alock);
        // cout << "after locker semaphore wait"<<endl;
         while(m==0){
             //use condition_variable stop thread
@@ -56,7 +56,7 @@ public:
     }
     void wait(int id){
         //cout << "before locker semaphore wait"<<endl;
-        unique_lock<mutex> locker(alock);
+       // unique_lock<mutex> locker(alock);
        // cout << "after locker semaphore wait"<<endl;
         while(m==0){
             //use condition_variable stop thread
@@ -232,15 +232,18 @@ auto funB = [](int id, int maxNum) -> void{
         chopsticks[(id + 1) % maxNum].signal();
         cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is releasing left chopstick"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
+        sem.notify_all();
     };
     auto releaseRightChopstick = [&]() -> void {
         chopsticks[(id) % maxNum].signal();
         cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is releasing left chopstick"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
+        sem.notify_all();
     };
     auto thinking = [=]()-> void {
         cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" is thinking"<<endl;
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
+        sem.notify_all();
     };
     // the philosopher join meal Number
 
