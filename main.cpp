@@ -48,7 +48,7 @@ public:
        // cout << "after locker semaphore wait"<<endl;
         while(m==0){
             //use condition_variable stop thread
-            cout << "(thread id ="<<&this_thread::get_id<<"is waiting)"<<endl;
+            cout << "(thread id ="<< this_thread::get_id() <<"is waiting)"<<endl;
             sem.wait(locker);
         }
         m--;
