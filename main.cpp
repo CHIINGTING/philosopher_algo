@@ -172,21 +172,21 @@ auto funB = [](int id, int maxNum) -> void{
     auto grabRightChopstick = [&]() -> void{
         while (chopsticks[id]==0){
             unique_lock<mutex> locker(alock);
-            cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
+            cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
             sem.wait(locker);
         }
         chopsticks[id].wait();
-        cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<" is grabing right chopstick"<<endl;
+        cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is grabing right chopstick"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
     };
     auto grabLeftChopstick = [&]() -> void {
         while (chopsticks[(id+1)%maxNum]==0){
             unique_lock<mutex> locker(alock);
-            cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
+            cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
             sem.wait(locker);
         }
         chopsticks[(id + 1) % maxNum].wait();
-        cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<" is grabing left chopstick"<<endl;
+        cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is grabing left chopstick"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
     };
     auto eating = [&]() -> void {
@@ -195,14 +195,14 @@ auto funB = [](int id, int maxNum) -> void{
         eat = eat +1;
         cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" done eating and he eat: " << eat << " times." <<endl;
     };
-    auto realseLeftChopstick = [&]() -> void {
+    auto releaseLeftChopstick = [&]() -> void {
         chopsticks[(id + 1) % maxNum].signal();
-        cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<" is realsing left chopstick"<<endl;
+        cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is releasing left chopstick"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
     };
-    auto realseRightChopstick = [&]() -> void {
+    auto releaseRightChopstick = [&]() -> void {
         chopsticks[(id) % maxNum].signal();
-        cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<" is realsing left chopstick"<<endl;
+        cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is releasing left chopstick"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
     };
     auto thinking = [=]()-> void {
@@ -217,16 +217,16 @@ auto funB = [](int id, int maxNum) -> void{
             grabLeftChopstick();
             grabRightChopstick();
             eating();
-            realseLeftChopstick();
-            realseRightChopstick();
+            releaseLeftChopstick();
+            releaseRightChopstick();
             thinking();
 
         } else{
             grabRightChopstick();
             grabLeftChopstick();
             eating();
-            realseRightChopstick();
-            realseLeftChopstick();
+            releaseRightChopstick();
+            releaseLeftChopstick();
             thinking();
         }
         user.signal();
@@ -251,13 +251,9 @@ auto funC = [](int id, int maxNum) -> void {
         std::this_thread::sleep_for(chrono::seconds(random()%5));
         chopsticks[id].signal();
         chopsticks[(id + 1) % maxNum].signal();
-        sem.notify_all();
     };
     auto thinking = [=](){
-        alock.lock();
-        sem.notify_all();
         cout << "philosopher Num: " << id << " thread id = " << this_thread::get_id() << "is thinking" << endl;
-        alock.unlock();
         chrono::microseconds s(20000);
         this_thread::sleep_for(s);
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
