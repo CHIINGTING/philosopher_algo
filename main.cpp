@@ -60,7 +60,7 @@ public:
         cout << "after locker semaphore wait"<<endl;
         while(m==0){
             //use condition_variable stop thread
-            cout << "the philosopher: "<< id << " thread id ="<< this_thread::get_id() <<" is waiting"<<endl;
+            cout << "the philosopher: "<< id+1 << " thread id ="<< this_thread::get_id() <<" is waiting"<<endl;
             sem.wait(locker);
         }
         //alock.lock();
@@ -181,7 +181,7 @@ auto funA = [](int id, int maxNum) -> void{
         cout << " done eat :"<< eat << " times "<< endl;
         alock.unlock();
         chopsticks[id].signal();
-
+        chopsticks[(id+1)%maxNum].signal();
     };
     auto thinking = [&]() -> void{
         alock.lock();
