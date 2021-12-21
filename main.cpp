@@ -197,9 +197,8 @@ auto funB = [](int id, int maxNum) -> void{
         cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" is thinking"<<endl;
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
     };
-    alock.lock();
-    user-1;
-    alock.unlock();
+    // the philosopher join meal Number
+    user.wait();
 
     while (eat<10){
 
@@ -220,6 +219,7 @@ auto funB = [](int id, int maxNum) -> void{
             thinking();
         }
     }
+    user.signal();
     cout << "the philosopher: "<<id+1<< " end he meal"<<endl;
 };
 
