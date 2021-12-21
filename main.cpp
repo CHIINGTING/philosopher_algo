@@ -86,6 +86,7 @@ public:
 
 vector<semaphore> chopsticks;
 semaphore user;
+semaphore single=1;
 
 
 // algo method No.
@@ -177,6 +178,7 @@ auto funA = [](int id, int maxNum) -> void{
         this_thread::sleep_for(chrono::seconds(random()%10));
     };
     while(eat < 10){
+        single.wait();
     //    cout<< "this is method 1"<<endl;
         eating();
         thinking();
