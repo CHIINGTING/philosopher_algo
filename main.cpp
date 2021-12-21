@@ -81,8 +81,8 @@ public:
         alock.lock();
       //  cout<<"in singal lock"<<endl;
         m++;
-        sem.notify_all();
         alock.unlock();
+        sem.notify_all();
     }
     void operator = (const unsigned int &t){
         m = t;
@@ -211,8 +211,8 @@ auto funB = [](int id, int maxNum) -> void{
         chopsticks[id].wait();
         alock.lock();
         cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is grabing right chopstick"<<endl;
-        this_thread::sleep_for(chrono::seconds(random()%5));
         alock.unlock();
+        this_thread::sleep_for(chrono::seconds(random()%5));
     };
     auto grabLeftChopstick = [&]() -> void {
         while (chopsticks[(id+1)%maxNum]==0){
