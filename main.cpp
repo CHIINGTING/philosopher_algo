@@ -223,8 +223,8 @@ auto funB = [](int id, int maxNum) -> void{
         chopsticks[(id + 1) % maxNum].wait();
         alock.lock();
         cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is grabing left chopstick"<<endl;
-        this_thread::sleep_for(chrono::seconds(random()%5));
         alock.unlock();
+        this_thread::sleep_for(chrono::seconds(random()%5));
     };
     auto eating = [&]() -> void {
         alock.lock();
