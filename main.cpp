@@ -157,7 +157,7 @@ auto funA = [](int id, int maxNum) -> void{
     int eat=0;
     auto eating = [&]() -> void{
         while (chopsticks[id]==0){
-            unique_lock<mutex> locker(alock);
+            //unique_lock<mutex> locker(alock);
             alock.lock();
             cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
             alock.unlock();
@@ -165,7 +165,7 @@ auto funA = [](int id, int maxNum) -> void{
         }
         chopsticks[id].wait();
         while (chopsticks[(id+1)%maxNum]==0){
-            unique_lock<mutex> locker(alock);
+            //unique_lock<mutex> locker(alock);
             cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
             sem.wait(locker);
         }
@@ -204,7 +204,7 @@ auto funB = [](int id, int maxNum) -> void{
     int eat = 0;
     auto grabRightChopstick = [&]() -> void{
         while (chopsticks[id]==0){
-            unique_lock<mutex> locker(alock);
+            //unique_lock<mutex> locker(alock);
             cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
             sem.wait(locker);
         }
@@ -214,7 +214,7 @@ auto funB = [](int id, int maxNum) -> void{
     };
     auto grabLeftChopstick = [&]() -> void {
         while (chopsticks[(id+1)%maxNum]==0){
-            unique_lock<mutex> locker(alock);
+            //unique_lock<mutex> locker(alock);
             cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
             sem.wait(locker);
         }
@@ -271,15 +271,12 @@ auto funB = [](int id, int maxNum) -> void{
 auto funC = [](int id, int maxNum) -> void {
     int eat = 0;
     auto eating = [&]() -> void {
-        cout << "in eating"<< endl;
         //unique_lock<mutex> locker(alock);
         while (chopsticks[id] == 0 || chopsticks[(id + 1) % maxNum] == 0){
             cout << "philosopher Num: " << id << " done eat :" << eat + 1 << " thread id = " << this_thread::get_id() << "is waiting" << endl;
             sem.wait(locker);
         }
-        cout << "before chopstics "<< endl;
         chopsticks[id].wait(id);
-        cout << "after chopstics "<< endl;
         chopsticks[(id + 1) % maxNum].wait();
         cout << "philosopher Num: " << id << " eat number: " << eat + 1 << " thread id = " << this_thread::get_id() << " is eating" << endl;
         eat++;
@@ -294,7 +291,6 @@ auto funC = [](int id, int maxNum) -> void {
     while (eat<10){
         eating();
         thinking();
-        cout<<"end thinking"<<endl;
 
     }
     cout << "the philosopher: "<<id+1<< " end he meal"<<endl;
