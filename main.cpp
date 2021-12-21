@@ -41,6 +41,7 @@ public:
 
     //semaphore wait
     void down(){
+        cout << "before locker semaphore down"<<endl;
         unique_lock<mutex> locker(alock);
         while(m==0){
             //use condition_variable stop thread
