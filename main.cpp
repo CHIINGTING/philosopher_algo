@@ -26,7 +26,7 @@ unsigned int maxNum;
 //global
 mutex alock;
 std::condition_variable sem;
-unique_lock<mutex> locker(alock);
+//unique_lock<mutex> locker(alock);
 //define semaphore
 class semaphore{
 private:
