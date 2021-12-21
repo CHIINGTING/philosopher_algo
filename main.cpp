@@ -44,7 +44,7 @@ public:
     //semaphore wait
     void wait(){
         //cout << "before locker semaphore wait"<<endl;
-       // unique_lock<mutex> locker(alock);
+        unique_lock<mutex> locker(alock);
        // cout << "after locker semaphore wait"<<endl;
         while(m==0){
             //use condition_variable stop thread
@@ -56,7 +56,7 @@ public:
     }
     void wait(int id){
         //cout << "before locker semaphore wait"<<endl;
-       // unique_lock<mutex> locker(alock);
+        unique_lock<mutex> locker(alock);
        // cout << "after locker semaphore wait"<<endl;
         while(m==0){
             //use condition_variable stop thread
@@ -157,7 +157,7 @@ auto funA = [](int id, int maxNum) -> void{
     int eat=0;
     auto eating = [&]() -> void{
         while (chopsticks[id]==0){
-            //unique_lock<mutex> locker(alock);
+            unique_lock<mutex> locker(alock);
             alock.lock();
             cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
             alock.unlock();
@@ -165,7 +165,7 @@ auto funA = [](int id, int maxNum) -> void{
         }
         chopsticks[id].wait();
         while (chopsticks[(id+1)%maxNum]==0){
-            //unique_lock<mutex> locker(alock);
+            unique_lock<mutex> locker(alock);
             cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
             sem.wait(locker);
         }
@@ -204,7 +204,7 @@ auto funB = [](int id, int maxNum) -> void{
     int eat = 0;
     auto grabRightChopstick = [&]() -> void{
         while (chopsticks[id]==0){
-            //unique_lock<mutex> locker(alock);
+            unique_lock<mutex> locker(alock);
             cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
             sem.wait(locker);
         }
@@ -214,7 +214,7 @@ auto funB = [](int id, int maxNum) -> void{
     };
     auto grabLeftChopstick = [&]() -> void {
         while (chopsticks[(id+1)%maxNum]==0){
-            //unique_lock<mutex> locker(alock);
+            unique_lock<mutex> locker(alock);
             cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
             sem.wait(locker);
         }
