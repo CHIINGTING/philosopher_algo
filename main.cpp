@@ -304,20 +304,19 @@ auto funC = [](int id, int maxNum) -> void {
         alock.lock();
         cout << "philosopher Num: " << id +1 << " thread id = " << this_thread::get_id() << " is eating" << endl;
         eat++;
-        std::this_thread::sleep_for(chrono::seconds(random()%5));
-
         chopsticks[id]=1;
         chopsticks[(id + 1) % maxNum]=1;
         cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" done eating and he eat: " << eat << " times." <<endl;
         alock.unlock();
-        sem.notify_all();
+        //sem.notify_all();
+        std::this_thread::sleep_for(chrono::seconds(random()%5));
     };
     auto thinking = [&]()->void{
         alock.lock();
         cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" is thinking"<<endl;
-        std::this_thread::sleep_for(chrono::seconds(random()%5+5));
         alock.unlock();
         sem.notify_all();
+        std::this_thread::sleep_for(chrono::seconds(random()%5+5));
     };
     while (eat<3){
         grabChopsticks();
