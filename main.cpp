@@ -256,12 +256,12 @@ auto funC = [](int id, int maxNum) -> void {
     auto thinking = [=](){
         cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" is thinking"<<endl;
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
-
     };
     while (eat<10){
+        eating();
         thinking();
         cout<<"end thinking"<<endl;
-        eating();
+
     }
     cout << "the philosopher: "<<id+1<< " end he meal"<<endl;
 };
