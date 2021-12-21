@@ -143,28 +143,39 @@ auto funA = [](int id, int maxNum) -> void{
     auto eating = [&]() -> void{
         while (chopsticks[id]==0){
             unique_lock<mutex> locker(alock);
-            cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
+            alock.lock();
+            cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
+            alock.unlock();
             sem.wait(locker);
         }
     //   cout<< "in eating"<<endl;
    //     cout<< "chopsticks["<<id<<"].wait();"<<endl;
         chopsticks[id].wait();
-        cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<" is eating"<<endl;
+        alock.lock();
+        cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" is eating"<<endl;
+        alock.unlock();
         this_thread::sleep_for(chrono::seconds(random()%5));
-        chopsticks[id].signal();
         eat++;
+        alock.lock();
+        cout << " done eat :"<< eat << " times "<< endl;
+        alock.unlock();
+        chopsticks[id].signal();
+
     };
     auto thinking = [&]() -> void{
+        alock.lock();
         cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<" is thinking"<<endl;
+        alock.unlock();
         this_thread::sleep_for(chrono::seconds(random()%10));
     };
     while(eat < 10){
-        cout<< "this is method 1"<<endl;
-        thinking();
+    //    cout<< "this is method 1"<<endl;
         eating();
+        thinking();
     }
+    alock.lock();
     cout << "the philosopher: "<<id+1<< " end he meal"<<endl;
-
+    alock.unlock();
 };
 
 auto funB = [](int id, int maxNum) -> void{
