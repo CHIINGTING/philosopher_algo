@@ -192,7 +192,7 @@ auto funA = [](int id, int maxNum) -> void{
     };
     while(eat < 10){
         single.wait(id);
-    //    cout<< "this is method 1"<<endl;
+        cout<< "this is method 1"<<endl;
         eating();
         thinking();
         single.signal(id);
