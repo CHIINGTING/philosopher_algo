@@ -175,7 +175,8 @@ auto funA = [](int id, int maxNum) -> void{
         alock.lock();
         cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<" is thinking"<<endl;
         alock.unlock();
-        this_thread::sleep_for(chrono::seconds(random()%10));
+        this_thread::sleep_for(chrono::seconds(random()%5+5));
+        cout<< "done thinking"<<endl;
     };
     while(eat < 10){
         single.wait();
