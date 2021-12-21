@@ -97,7 +97,9 @@ public:
 };
 
 vector<semaphore> chopsticks;
+// limit user number to eat
 semaphore user;
+// limit one to eat
 semaphore single=1;
 
 
@@ -161,14 +163,10 @@ auto funA = [](int id, int maxNum) -> void{
             alock.unlock();
             sem.wait(locker);
         }
-    //   cout<< "in eating"<<endl;
-   //     cout<< "chopsticks["<<id<<"].wait();"<<endl;
         chopsticks[id].wait();
         while (chopsticks[(id+1)%maxNum]==0){
             unique_lock<mutex> locker(alock);
-            //alock.lock();
             cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
-            //alock.unlock();
             sem.wait(locker);
         }
         chopsticks[(id+1)%maxNum].wait();
@@ -275,17 +273,18 @@ auto funC = [](int id, int maxNum) -> void {
     auto eating = [&]() -> void {
         cout << "in eating"<< endl;
         unique_lock<mutex> locker(alock);
-
         while (chopsticks[id] == 0 || chopsticks[(id + 1) % maxNum] == 0){
             cout << "philosopher Num: " << id << " done eat :" << eat + 1 << " thread id = " << this_thread::get_id() << "is waiting" << endl;
             sem.wait(locker);
         }
-        chopsticks[id].wait();
+        cout << "before chopstics "<< endl;
+        chopsticks[id].wait(id);
+        cout << "after chopstics "<< endl;
         chopsticks[(id + 1) % maxNum].wait();
         cout << "philosopher Num: " << id << " eat number: " << eat + 1 << " thread id = " << this_thread::get_id() << " is eating" << endl;
         eat++;
         std::this_thread::sleep_for(chrono::seconds(random()%5));
-        chopsticks[id].signal();
+        chopsticks[id].signal(id);
         chopsticks[(id + 1) % maxNum].signal();
     };
     auto thinking = [=](){
