@@ -271,11 +271,10 @@ auto funB = [](int id, int maxNum) -> void{
 auto funC = [](int id, int maxNum) -> void {
     int eat = 0;
     auto eating = [&]() -> void {
-        //unique_lock<mutex> locker(alock);
+        //
         while (chopsticks[id] == 0 || chopsticks[(id + 1) % maxNum] == 0){
-            alock.lock();
+            unique_lock<mutex> locker(alock);
             cout << "philosopher Num: " << id+1 << " done eat :" << eat << " thread id = " << this_thread::get_id() << " is waiting" << endl;
-            alock.unlock();
             sem.wait(locker);
         }
         chopsticks[id].wait(id);
