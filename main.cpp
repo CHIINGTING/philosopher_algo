@@ -37,6 +37,9 @@ public:
     semaphore(const semaphore& sema){
         m=sema.m;
     }
+    unsigned int getValue(){
+        return m;
+    }
     
 
     //semaphore wait
@@ -126,11 +129,10 @@ auto funA = [](int id, int maxNum) -> void{
     std::condition_variable matex;
     int eat=0;
     auto eating = [&]() -> void{
-
-        unique_lock<mutex> funaLock(alock);
         while (chopsticks[id]==0){
+            unique_lock<mutex> locker(alock);
             cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is waiting"<<endl;
-            matex.wait(funaLock);
+            matex.wait(locker);
         }
         cout<< "in eating"<<endl;
         cout<< "chopsticks["<<id<<"].wait();"<<endl;
@@ -139,7 +141,6 @@ auto funA = [](int id, int maxNum) -> void{
         this_thread::sleep_for(chrono::seconds(random()%5));
         chopsticks[id].up();
         eat++;
-        matex.notify_all();
     };
     auto thinking = [=]() -> void{
         cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is thinking"<<endl;
@@ -257,6 +258,7 @@ int main(){
     //init chopsticks
     for(size_t i=0; i<maxNum; i++){
         chopsticks.emplace_back(1);
+        cout<<"chopsticks["<<i<<"]:"<<chopsticks[i].getValue()<<endl;
     }
 
     // init philosopher algo
