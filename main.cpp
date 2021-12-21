@@ -238,6 +238,7 @@ auto funB = [](int id, int maxNum) -> void{
 auto funC = [](int id, int maxNum) -> void {
     int eat = 0;
     auto eating = [&]() -> void {
+        cout << "in eating"<< endl;
         unique_lock<mutex> locker(alock);
 
         while (chopsticks[id] == 0 || chopsticks[(id + 1) % maxNum] == 0){
@@ -259,7 +260,7 @@ auto funC = [](int id, int maxNum) -> void {
     };
     while (eat<10){
         thinking();
-        cout<<"end thinking";
+        cout<<"end thinking"<<endl;
         eating();
     }
     cout << "the philosopher: "<<id+1<< " end he meal"<<endl;
