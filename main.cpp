@@ -252,7 +252,7 @@ auto funC = [](int id, int maxNum) -> void {
         chopsticks[id].signal();
         chopsticks[(id + 1) % maxNum].signal();
     };
-    auto thinking = [=](){
+    auto thinking = [&](){
         alock.lock();
         cout << "philosopher Num: " << id << " thread id = " << this_thread::get_id() << "is thinking" << endl;
         alock.unlock();
