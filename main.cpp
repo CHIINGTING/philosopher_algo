@@ -48,6 +48,7 @@ public:
             sem.wait(locker);
         }
         m--;
+        cout << "semaphore down"<<endl;
     }
     void up() {
         alock.lock();
