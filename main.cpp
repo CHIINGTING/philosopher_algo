@@ -63,9 +63,9 @@ public:
             cout << "the philosopher: "<< id << " thread id ="<< this_thread::get_id() <<" is waiting"<<endl;
             sem.wait(locker);
         }
-        alock.lock();
+        //alock.lock();
         m--;
-        alock.unlock();
+        //alock.unlock();
         cout << "semaphore wait"<<endl;
     }
     void signal() {
