@@ -182,6 +182,7 @@ auto funA = [](int id, int maxNum) -> void{
     //    cout<< "this is method 1"<<endl;
         eating();
         thinking();
+        single.signal();
     }
     alock.lock();
     cout << "the philosopher: "<<id+1<< " end he meal"<<endl;
