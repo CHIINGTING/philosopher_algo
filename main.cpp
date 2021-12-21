@@ -126,13 +126,13 @@ public:
 
 // algo
 auto funA = [](int id, int maxNum) -> void{
-    std::condition_variable matex;
+   // std::condition_variable matex;
     int eat=0;
     auto eating = [&]() -> void{
         while (chopsticks[id]==0){
             unique_lock<mutex> locker(alock);
             cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is waiting"<<endl;
-            matex.wait(locker);
+            sem.wait(locker);
         }
         cout<< "in eating"<<endl;
         cout<< "chopsticks["<<id<<"].wait();"<<endl;
@@ -142,8 +142,8 @@ auto funA = [](int id, int maxNum) -> void{
         chopsticks[id].up();
         eat++;
     };
-    auto thinking = [=]() -> void{
-        cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<"is thinking"<<endl;
+    auto thinking = [&]() -> void{
+        cout<< "philosopher Num: "<< id << " done eat :"<< eat+1 <<" thread id = "<<this_thread::get_id()<<" is thinking"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%10));
     };
     while(eat < 10){
