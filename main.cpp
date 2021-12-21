@@ -54,6 +54,18 @@ public:
         m--;
         //cout << "semaphore wait"<<endl;
     }
+    void wait(int id){
+        //cout << "before locker semaphore wait"<<endl;
+        unique_lock<mutex> locker(alock);
+        // cout << "after locker semaphore wait"<<endl;
+        while(m==0){
+            //use condition_variable stop thread
+            cout << "the philosopher: "<< id << " thread id ="<< this_thread::get_id() <<" is waiting for outside"<<endl;
+            sem.wait(locker);
+        }
+        m--;
+        //cout << "semaphore wait"<<endl;
+    }
     void signal() {
         alock.lock();
         m++;
@@ -198,7 +210,7 @@ auto funB = [](int id, int maxNum) -> void{
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
     };
     // the philosopher join meal Number
-    user.wait();
+    user.wait(int id);
 
     while (eat<10){
 
