@@ -256,6 +256,7 @@ auto funC = [](int id, int maxNum) -> void {
         alock.lock();
         cout << "philosopher Num: " << id << " thread id = " << this_thread::get_id() << "is thinking" << endl;
         alock.unlock();
+        cout << "alock"<<endl;
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
 
     };
