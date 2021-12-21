@@ -139,10 +139,6 @@ public:
             funcs.push_back(*funAlgo);
         }
     }
-    // add new algo
-    void add(function<void(int i, int maxNum)> algo){
-        funcs.push_back(algo);
-    }
     // get algo method
     function<void(int i, int maxNum)> get(algoNum i){
         return funcs[i];
