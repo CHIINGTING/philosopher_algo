@@ -60,7 +60,7 @@ public:
         // cout << "after locker semaphore wait"<<endl;
         while(m==0){
             //use condition_variable stop thread
-            cout << "the philosopher: "<< id << " thread id ="<< this_thread::get_id() <<" is waiting for outside"<<endl;
+            cout << "the philosopher: "<< id << " thread id ="<< this_thread::get_id() <<" is waiting"<<endl;
             sem.wait(locker);
         }
         m--;
@@ -193,7 +193,7 @@ auto funB = [](int id, int maxNum) -> void{
         cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" is eating "<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
         eat = eat +1;
-        cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" done eating and he eat: " << eat << "times" <<endl;
+        cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" done eating and he eat: " << eat << " times." <<endl;
     };
     auto realseLeftChopstick = [&]() -> void {
         chopsticks[(id + 1) % maxNum].signal();
@@ -210,10 +210,9 @@ auto funB = [](int id, int maxNum) -> void{
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
     };
     // the philosopher join meal Number
-    user.wait(id);
 
     while (eat<10){
-
+        user.wait(id);
         if (id%2){
             grabLeftChopstick();
             grabRightChopstick();
@@ -230,8 +229,9 @@ auto funB = [](int id, int maxNum) -> void{
             realseLeftChopstick();
             thinking();
         }
+        user.signal();
     }
-    user.signal();
+
     cout << "the philosopher: "<<id+1<< " end he meal"<<endl;
 };
 
