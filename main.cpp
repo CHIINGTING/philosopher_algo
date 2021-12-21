@@ -57,6 +57,7 @@ public:
     void signal() {
         alock.lock();
         m++;
+        sem.notify_all();
         alock.unlock();
     }
     void operator = (const unsigned int &t){
