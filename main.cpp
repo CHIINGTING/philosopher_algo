@@ -156,6 +156,7 @@ auto funA = [](int id, int maxNum) -> void{
    // std::condition_variable matex;
     int eat=0;
     auto eating = [&]() -> void{
+        /*
         while (chopsticks[id]==0){
             unique_lock<mutex> locker(alock);
             alock.lock();
@@ -163,12 +164,14 @@ auto funA = [](int id, int maxNum) -> void{
             alock.unlock();
             sem.wait(locker);
         }
+         */
         chopsticks[id].wait();
+        /*
         while (chopsticks[(id+1)%maxNum]==0){
             unique_lock<mutex> locker(alock);
             cout<< "philosopher Num: "<< id+1 << " done eat :"<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
             sem.wait(locker);
-        }
+        }*/
         chopsticks[(id+1)%maxNum].wait();
         alock.lock();
         cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" is eating"<<endl;
@@ -203,11 +206,12 @@ auto funA = [](int id, int maxNum) -> void{
 auto funB = [](int id, int maxNum) -> void{
     int eat = 0;
     auto grabRightChopstick = [&]() -> void{
+        /*
         while (chopsticks[id]==0){
             unique_lock<mutex> locker(alock);
             cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
             sem.wait(locker);
-        }
+        }*/
         chopsticks[id].wait();
         alock.lock();
         cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is grabing right chopstick"<<endl;
@@ -215,11 +219,11 @@ auto funB = [](int id, int maxNum) -> void{
         this_thread::sleep_for(chrono::seconds(random()%5));
     };
     auto grabLeftChopstick = [&]() -> void {
-        while (chopsticks[(id+1)%maxNum]==0){
+       /* while (chopsticks[(id+1)%maxNum]==0){
             unique_lock<mutex> locker(alock);
             cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is waiting"<<endl;
             sem.wait(locker);
-        }
+        }*/
         chopsticks[(id + 1) % maxNum].wait();
         alock.lock();
         cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is grabing left chopstick"<<endl;
@@ -240,7 +244,7 @@ auto funB = [](int id, int maxNum) -> void{
         cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is releasing left chopstick"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
         alock.unlock();
-      //  sem.notify_all();
+        //sem.notify_all();
     };
     auto releaseRightChopstick = [&]() -> void {
         chopsticks[(id) % maxNum].signal();
@@ -248,7 +252,7 @@ auto funB = [](int id, int maxNum) -> void{
         cout<< "philosopher Num: "<< id+1 << " done eat: "<< eat <<" thread id = "<<this_thread::get_id()<<" is releasing left chopstick"<<endl;
         this_thread::sleep_for(chrono::seconds(random()%5));
         alock.unlock();
-       // sem.notify_all();
+        sem.notify_all();
     };
     auto thinking = [=]()-> void {
         alock.lock();
@@ -287,11 +291,13 @@ auto funC = [](int id, int maxNum) -> void {
     int eat = 0;
     auto eating = [&]() -> void {
         //
+        /*
         while (chopsticks[id] == 0 || chopsticks[(id + 1) % maxNum] == 0){
             unique_lock<mutex> locker(alock);
             cout << "philosopher Num: " << id+1 << " done eat :" << eat << " thread id = " << this_thread::get_id() << " is waiting" << endl;
             sem.wait(locker);
         }
+         */
         chopsticks[id].wait(id);
         chopsticks[(id + 1) % maxNum].wait();
         alock.lock();
@@ -310,7 +316,7 @@ auto funC = [](int id, int maxNum) -> void {
         cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" is thinking"<<endl;
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
         alock.unlock();
-       // sem.notify_all();
+        sem.notify_all();
     };
     while (eat<3){
         eating();
