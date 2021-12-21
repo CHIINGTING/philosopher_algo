@@ -236,7 +236,7 @@ auto funB = [](int id, int maxNum) -> void{
 };
 
 auto funC = [](int id, int maxNum) -> void {
-    int eat= 0;
+    int eat = 0;
     auto eating = [&]() -> void {
         unique_lock<mutex> locker(alock);
 
@@ -252,11 +252,8 @@ auto funC = [](int id, int maxNum) -> void {
         chopsticks[id].signal();
         chopsticks[(id + 1) % maxNum].signal();
     };
-    auto thinking = [&](){
-        alock.lock();
-        cout << "philosopher Num: " << id << " thread id = " << this_thread::get_id() << "is thinking" << endl;
-        alock.unlock();
-        cout << "alock"<<endl;
+    auto thinking = [=](){
+        cout<< "philosopher Num: "<< id+1 <<" thread id = "<<this_thread::get_id()<<" is thinking"<<endl;
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
 
     };
