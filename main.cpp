@@ -253,7 +253,9 @@ auto funC = [](int id, int maxNum) -> void {
         chopsticks[(id + 1) % maxNum].signal();
     };
     auto thinking = [=](){
+        alock.lock();
         cout << "philosopher Num: " << id << " thread id = " << this_thread::get_id() << "is thinking" << endl;
+        alock.unlock();
         std::this_thread::sleep_for(chrono::seconds(random()%5+5));
     };
     while (eat<10){
