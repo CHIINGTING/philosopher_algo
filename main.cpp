@@ -306,6 +306,7 @@ auto funC = [](int id, int maxNum) -> void {
         thinking();
     }
     cout << "the philosopher: "<<id+1<< " end his meal"<<endl;
+    sem.notify_all();
 };
 
 philosopher *philosopher::instance;
