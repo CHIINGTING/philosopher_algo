@@ -322,6 +322,7 @@ auto funC = [](int id, int maxNum) -> void {
     cout << "the philosopher: "<<id+1<< " end his meal"<<endl;
 };
 
+
 philosopher *philosopher::instance;
 int main(){
     // 加入3種演算法
